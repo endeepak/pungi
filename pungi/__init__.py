@@ -7,5 +7,5 @@ def expect(actual):
     return Expectation(actual)
 
 
-def spyOn(*args, **kwargs):
-    return Spy.create(*args, **kwargs)
+def spyOn(target, methodName, **kwargs):
+    return Spy.create(target, methodName, **kwargs)

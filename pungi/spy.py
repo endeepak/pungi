@@ -18,8 +18,8 @@ class Spy(object):
         self._callThrough = callThrough
         self._callFake = callFake
 
-    def __call__(self, *args):
-        self._calls.append(Call(args))
+    def __call__(self, *args, **kwargs):
+        self._calls.append(Call(args, kwargs))
         if(self._callThrough):
             return self._originalMethod()
         if(self._callFake):
@@ -39,6 +39,15 @@ class Spy(object):
 
     def wasCalled(self):
         return self.callCount() > 0
+
+    def mostRecentCall(self):
+        return self._calls[-1]
+
+    def argsForCall(self, callIndex):
+        return self._calls[callIndex].args
+
+    def kwargsForCall(self, callIndex):
+        return self._calls[callIndex].kwargs
 
     def andReturn(self, returnValue):
         self._returnValue = returnValue
@@ -62,5 +71,6 @@ class Spy(object):
 
 class Call(object):
 
-    def __init__(self, args):
+    def __init__(self, args, kwargs):
         self.args = args
+        self.kwargs = kwargs

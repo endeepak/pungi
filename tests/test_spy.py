@@ -121,6 +121,43 @@ class SpyTest(unittest.TestCase):
         self.assertEqual(obj.hello(), "fake hello")
         self.assertEqual(obj.hello.callCount(), 1)
 
+    def test_most_recent_call_args(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello("h", "e", "l", "l", "o")
+
+        self.assertEqual(obj.hello.mostRecentCall().args,
+                        ("h", "e", "l", "l", "o"))
+
+    def test_most_recent_call_kwargs(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello(say="hello")
+
+        self.assertEqual(obj.hello.mostRecentCall().kwargs, dict(say="hello"))
+
+    def test_args_for_call(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello("h", "e")
+        obj.hello("l", "l", "o")
+
+        self.assertEqual(obj.hello.argsForCall(0), ("h", "e"))
+        self.assertEqual(obj.hello.argsForCall(1), ("l", "l", "o"))
+
+    def test_kwargs_for_call(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello(say="hello")
+        obj.hello(to="world")
+
+        self.assertEqual(obj.hello.kwargsForCall(0), dict(say="hello"))
+        self.assertEqual(obj.hello.kwargsForCall(1), dict(to="world"))
+
 
 class SpyUsageTest(unittest.TestCase):
 
