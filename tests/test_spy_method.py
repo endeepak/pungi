@@ -17,14 +17,14 @@ class SpyMethodTest(unittest.TestCase):
 
         spyOn(obj, 'hello', returnValue="spy says hello")
 
-        expect(obj.hello()).toBe("spy says hello")
+        self.assertEqual(obj.hello(), "spy says hello")
 
     def test_return_value_for_andReturn_syntax(self):
         obj = TempClass()
 
         spyOn(obj, 'hello').andReturn("spy says hello")
 
-        expect(obj.hello()).toBe("spy says hello")
+        self.assertEqual(obj.hello(), "spy says hello")
 
     def test_call_count_before_call(self):
         obj = TempClass()

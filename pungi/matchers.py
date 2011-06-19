@@ -1,6 +1,7 @@
 from pungi import string
 import re
 
+
 class Base(object):
 
     def __init__(self, actual, *expectedValues):
@@ -43,10 +44,47 @@ class ToBe(Base):
 class ToEqual(ToBe):
     pass
 
+
+class ToBeNone(Base):
+
+    def matches(self):
+        return self.actual is None
+
+
+class ToBeTruthy(Base):
+
+    def matches(self):
+        return self.actual is True
+
+
+class ToBeFalsy(Base):
+
+    def matches(self):
+        return self.actual is False
+
+
 class ToMatch(Base):
 
     def matches(self, expected):
         return re.match(expected, self.actual)
+
+
+class ToContain(Base):
+
+    def matches(self, expected):
+        return expected in self.actual
+
+
+class ToBeGreaterThan(Base):
+
+    def matches(self, expected):
+        return self.actual > expected
+
+
+class ToBeLessThan(Base):
+
+    def matches(self, expected):
+        return self.actual < expected
 
 
 class ToHaveBeenCalled(Base):
