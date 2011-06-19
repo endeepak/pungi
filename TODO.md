@@ -1,7 +1,5 @@
 ##Spy
 
-* Track all spies
-* Method to clean up all spies (This can be used test tearDown)
 * Method Decorator to cleanup all spies in a test method
 * Ability to declare spying on multiple methods of object
 * Rename current spy class to SpyMethod (To differentiate from spy objects)

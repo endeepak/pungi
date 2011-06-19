@@ -1,4 +1,5 @@
 import unittest
+from pungi import spy
 from pungi import spyOn
 from pungi import expect
 
@@ -157,6 +158,14 @@ class SpyTest(unittest.TestCase):
 
         self.assertEqual(obj.hello.kwargsForCall(0), dict(say="hello"))
         self.assertEqual(obj.hello.kwargsForCall(1), dict(to="world"))
+
+    def test_stop_spies(self):
+        obj = TempClass()
+        spyOn(obj, 'hello', returnValue="spy says helloe")
+
+        spy.Spy.stop()
+
+        self.assertEqual(obj.hello(), "hello")
 
 
 class SpyUsageTest(unittest.TestCase):

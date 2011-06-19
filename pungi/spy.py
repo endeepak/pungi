@@ -1,11 +1,23 @@
 class Spy(object):
+    _all = []
 
-    @staticmethod
-    def create(target, methodName, **kwargs):
+    @classmethod
+    def create(cls, target, methodName, **kwargs):
         originalMethod = getattr(target, methodName)
         spy = Spy(target, methodName, originalMethod, **kwargs)
         setattr(target, methodName, spy)
+        cls._track(spy)
         return spy
+
+    @classmethod
+    def _track(cls, spy):
+        cls._all.append(spy)
+
+    @classmethod
+    def stop(cls):
+        for spy in cls._all:
+            spy._rollback()
+        del cls._all[:]
 
     def __init__(self, target, methodName, originalMethod, returnValue=None,
                 raiseException=None, callThrough=False, callFake=None):
