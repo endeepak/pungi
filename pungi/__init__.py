@@ -8,7 +8,7 @@ def expect(actual):
 
 
 def spyOn(target, methodName, **kwargs):
-    originalMethod = getattr(target, methodName)
+    originalMethod = getattr(target, methodName, None)
     return spy.Method.create(target, methodName, originalMethod, **kwargs)
 
 
