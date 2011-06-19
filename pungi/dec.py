@@ -1,19 +1,24 @@
 import pungi
 
 
-def test(function):
-
-    def decorator(self):
-        function(self)
-        pungi.stopSpying()
+def test(method):
+    decorator = _decorate(method)
     return decorator
 
+
 def testcase(cls):
-    test_methods = filter(lambda name: name.startswith("test_"), cls.__dict__.keys())
+    methods = cls.__dict__.keys()
+    test_methods = filter(lambda name: name.startswith("test_"), methods)
     for method_name in test_methods:
         method = getattr(cls, method_name)
-        def decorator(self):
-            method(self)
-            pungi.stopSpying()
+        decorator = _decorate(method)
         setattr(cls, method_name, decorator)
     return cls
+
+
+def _decorate(method):
+
+    def decorator(self):
+        method(self)
+        pungi.stopSpying()
+    return decorator
