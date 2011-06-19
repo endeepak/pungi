@@ -89,8 +89,15 @@ class Call(object):
 
 class Object(object):
 
+    @classmethod
+    def create(cls, name, **methodsWithReturnValue):
+        obj = cls(name)
+        for method, returnValue in methodsWithReturnValue.iteritems():
+            Method.create(obj, method, returnValue=returnValue)
+        return obj
+
     def __init__(self, name):
         self.name = name
 
-    def __getattr__(self, name):
-        return Method.create(self, name)
+    def __getattr__(self, attr_name):
+        return Method.create(self, attr_name)

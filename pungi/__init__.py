@@ -9,8 +9,8 @@ def expect(actual):
 
 def spyOn(target, methodName, **kwargs):
     originalMethod = getattr(target, methodName)
-    return spy.Method.create(target, methodName, originalMethod,**kwargs)
+    return spy.Method.create(target, methodName, originalMethod, **kwargs)
 
 
-def createSpy(name=None):
-    return spy.Object(name)
+def createSpy(name=None, **methodsWithReturnValue):
+    return spy.Object.create(name, **methodsWithReturnValue)
