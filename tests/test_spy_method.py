@@ -10,7 +10,7 @@ class TempClass(object):
         return "hello"
 
 
-class SpyTest(unittest.TestCase):
+class SpyMethodTest(unittest.TestCase):
 
     def test_return_value(self):
         obj = TempClass()
@@ -159,11 +159,11 @@ class SpyTest(unittest.TestCase):
         self.assertEqual(obj.hello.kwargsForCall(0), dict(say="hello"))
         self.assertEqual(obj.hello.kwargsForCall(1), dict(to="world"))
 
-    def test_stop_spies(self):
+    def test_stop(self):
         obj = TempClass()
         spyOn(obj, 'hello', returnValue="spy says helloe")
 
-        spy.Spy.stop()
+        spy.Method.stop()
 
         self.assertEqual(obj.hello(), "hello")
 

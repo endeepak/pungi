@@ -1,10 +1,10 @@
-class Spy(object):
+class Method(object):
     _all = []
 
     @classmethod
     def create(cls, target, methodName, **kwargs):
         originalMethod = getattr(target, methodName)
-        spy = Spy(target, methodName, originalMethod, **kwargs)
+        spy = cls(target, methodName, originalMethod, **kwargs)
         setattr(target, methodName, spy)
         cls._track(spy)
         return spy
