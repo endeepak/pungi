@@ -1,5 +1,6 @@
 ##Spy
 
+* Add aliasing matchers (ToBe => ToEqual)
 * Tracking spy call orders
 
 ## Matchers

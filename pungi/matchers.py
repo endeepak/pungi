@@ -1,5 +1,5 @@
 from pungi import string
-
+import re
 
 class Base(object):
 
@@ -35,6 +35,18 @@ class ToBe(Base):
 
     def matches(self):
         return self.actual == self.expectedValues[0]
+
+
+class ToEqual(Base):
+
+    def matches(self):
+        return self.actual == self.expectedValues[0]
+
+
+class ToMatch(Base):
+
+    def matches(self):
+        return re.match(self.expectedValues[0], self.actual)
 
 
 class ToHaveBeenCalled(Base):

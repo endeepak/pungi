@@ -32,4 +32,6 @@ class Expectation(object):
 
 
 Expectation.addMatcher(matchers.ToBe)
+Expectation.addMatcher(matchers.ToEqual)
+Expectation.addMatcher(matchers.ToMatch)
 Expectation.addMatcher(matchers.ToHaveBeenCalled)
