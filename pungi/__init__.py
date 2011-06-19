@@ -14,3 +14,7 @@ def spyOn(target, methodName, **kwargs):
 
 def createSpy(name=None, **methodsWithReturnValue):
     return spy.Object.create(name, **methodsWithReturnValue)
+
+
+def stopSpying():
+    spy.Method.stop()
