@@ -2,8 +2,7 @@ class Method(object):
     _all = []
 
     @classmethod
-    def create(cls, target, methodName, **kwargs):
-        originalMethod = getattr(target, methodName)
+    def create(cls, target, methodName, originalMethod=None, **kwargs):
         spy = cls(target, methodName, originalMethod, **kwargs)
         setattr(target, methodName, spy)
         cls._track(spy)
@@ -86,3 +85,12 @@ class Call(object):
     def __init__(self, args, kwargs):
         self.args = args
         self.kwargs = kwargs
+
+
+class Object(object):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __getattr__(self, name):
+        return Method.create(self, name)
