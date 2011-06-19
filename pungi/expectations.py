@@ -8,7 +8,7 @@ class Expectation(object):
         self.actual = actual
 
     def verify(self, matcher):
-        if(not matcher.matches()):
+        if(not matcher.matchesExpectation()):
             self.fail("Expected {0} {1}".format(
                         repr(self.actual), matcher.message()))
 

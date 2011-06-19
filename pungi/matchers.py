@@ -8,6 +8,9 @@ class Base(object):
         self.expectedValues = expectedValues
         self.negated = NegativeMatcher(self)
 
+    def matchesExpectation(self):
+        return self.matches(*self.expectedValues)
+
     def message(self):
         ''' Override this to provide failure message'''
         name = self.__class__.__name__
@@ -24,8 +27,8 @@ class NegativeMatcher(Base):
     def __init__(self, assertion):
         self.assertion = assertion
 
-    def matches(self):
-        return not self.assertion.matches()
+    def matchesExpectation(self):
+        return not self.assertion.matchesExpectation()
 
     def message(self):
         return "not {0}".format(self.assertion.message())
@@ -33,20 +36,17 @@ class NegativeMatcher(Base):
 
 class ToBe(Base):
 
-    def matches(self):
-        return self.actual == self.expectedValues[0]
+    def matches(self, expected):
+        return self.actual == expected
 
 
-class ToEqual(Base):
-
-    def matches(self):
-        return self.actual == self.expectedValues[0]
-
+class ToEqual(ToBe):
+    pass
 
 class ToMatch(Base):
 
-    def matches(self):
-        return re.match(self.expectedValues[0], self.actual)
+    def matches(self, expected):
+        return re.match(expected, self.actual)
 
 
 class ToHaveBeenCalled(Base):
