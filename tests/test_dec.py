@@ -15,7 +15,7 @@ class MethodDecoratorTest(unittest.TestCase):
         self.obj = TempClass()
 
     @pungi.dec.test
-    def test_spied_decorator_stops_spying_after_running_the_test(self):
+    def test_method_decorator_stops_spying_after_running_the_test(self):
         pungi.spyOn(self.obj, 'hello', returnValue="spy says hello")
 
         self.assertEqual(self.obj.hello(), "spy says hello")
@@ -31,7 +31,7 @@ class ClassDecoratorTest(unittest.TestCase):
     def setUp(self):
         self.obj = TempClass()
 
-    def test_spied_decorator_stops_spying_after_running_the_test(self):
+    def test_class_decorator_stops_spying_after_running_the_test(self):
         pungi.spyOn(self.obj, 'hello', returnValue="spy says hello")
 
         self.assertEqual(self.obj.hello(), "spy says hello")

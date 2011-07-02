@@ -3,8 +3,8 @@ from expectations import Expectation
 from pungi import spy
 
 
-def expect(actual):
-    return Expectation(actual)
+def expect(actual, *args, **kwargs):
+    return Expectation(actual, *args, **kwargs)
 
 
 def spyOn(target, methodName, **kwargs):

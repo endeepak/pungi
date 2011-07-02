@@ -1,8 +1,11 @@
 import re
 
 
-def pp(*args):
-    return ", ".join([repr(s) for s in args])
+def pp(*args, **kwargs):
+    args_list = [repr(s) for s in args]
+    kwargs_list = ["{0}={1}".format(key, repr(value))
+                    for key, value in kwargs.iteritems()]
+    return ", ".join(args_list + kwargs_list)
 
 
 def humanize(word):

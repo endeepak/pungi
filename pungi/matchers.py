@@ -1,22 +1,23 @@
 from pungi import string
 import re
-
+import sys
 
 class Base(object):
 
-    def __init__(self, actual, *expectedValues):
+    def __init__(self, actual, *expectedArgs, **expectedKwArgs):
         self.actual = actual
-        self.expectedValues = expectedValues
+        self.expectedArgs = expectedArgs
+        self.expectedKwArgs = expectedKwArgs
         self.negated = NegativeMatcher(self)
 
     def matchesExpectation(self):
-        return self.matches(*self.expectedValues)
+        return self.matches(*self.expectedArgs, **self.expectedKwArgs)
 
     def message(self):
         ''' Override this to provide failure message'''
         name = self.__class__.__name__
         return "{0} {1}".format(string.humanize(name),
-                            string.pp(*self.expectedValues))
+                            string.pp(*self.expectedArgs, **self.expectedKwArgs))
 
     def matches(self):
         ''' Override this to verify assert'''
@@ -86,6 +87,16 @@ class ToBeLessThan(Base):
     def matches(self, expected):
         return self.actual < expected
 
+
+class ToRaise(Base):
+
+    def matches(self, expectedException, message=None):
+        try:
+            self.actual()
+        except:
+            ex_type, ex = sys.exc_info()[:2]
+            if(issubclass(ex_type, expectedException) and (message is None or ex.args[0] == message)):
+                return True
 
 class ToHaveBeenCalled(Base):
 

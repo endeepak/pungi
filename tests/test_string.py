@@ -16,6 +16,12 @@ class StringTest(unittest.TestCase):
         expect(string.pp(1, 2)).toBe("1, 2")
         expect(string.pp(1, [2, 3])).toBe("1, [2, 3]")
 
+    def test_pp_of_kwargs(self):
+        expect(string.pp(a=1, b=2)).toBe("a=1, b=2")
+
+    def test_pp_of_args_and_kwargs(self):
+        expect(string.pp(1, a='a')).toBe("1, a='a'")
+
     def test_humanize_camelcase_word(self):
         expect(string.humanize("SomeOne")).toBe("some one")
         expect(string.humanize("SomeOneElse")).toBe("some one else")

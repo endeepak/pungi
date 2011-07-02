@@ -21,11 +21,11 @@ class Expectation(object):
         method_name = matcher_name[0].lower() + matcher_name[1:]
         negated_method_name = "not" + matcher_name
 
-        def matcher_function(self, *expectedValues):
-            self.verify(matcherClass(self.actual, *expectedValues))
+        def matcher_function(self, *expectedArgs, **expectedKwArgs):
+            self.verify(matcherClass(self.actual, *expectedArgs, **expectedKwArgs))
 
-        def negated_matcher_function(self, *expectedValues):
-            self.verify(matcherClass(self.actual, *expectedValues).negated)
+        def negated_matcher_function(self, *expectedArgs, **expectedKwArgs):
+            self.verify(matcherClass(self.actual, *expectedArgs, **expectedKwArgs).negated)
 
         setattr(cls, method_name, matcher_function)
         setattr(cls, negated_method_name, negated_matcher_function)
@@ -40,4 +40,5 @@ Expectation.addMatcher(matchers.ToMatch)
 Expectation.addMatcher(matchers.ToContain)
 Expectation.addMatcher(matchers.ToBeGreaterThan)
 Expectation.addMatcher(matchers.ToBeLessThan)
+Expectation.addMatcher(matchers.ToRaise)
 Expectation.addMatcher(matchers.ToHaveBeenCalled)

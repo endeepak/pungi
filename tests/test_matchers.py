@@ -8,6 +8,9 @@ class TempClass(object):
     def hello(self):
         return "hello"
 
+class CustomException(Exception):
+    pass
+
 
 class TestMatchers(unittest.TestCase):
 
@@ -80,6 +83,34 @@ class TestMatchers(unittest.TestCase):
 
         self.assertRaises(AssertionError, expect(2).toBeLessThan, 1)
         self.assertRaises(AssertionError, expect(1).notToBeLessThan, 2)
+
+    def test_ToRaiseException(self):
+        def raise_ex():
+            raise CustomException
+
+        def dont_raise_ex():
+            pass
+
+        expect(raise_ex).toRaise(CustomException)
+        expect(dont_raise_ex).notToRaise(CustomException)
+
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise, CustomException)
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise, CustomException)
+
+    def test_ToRaiseExceptionWithMessage(self):
+        def raise_ex():
+            raise CustomException("<(^_^)>")
+
+        def dont_raise_ex():
+            pass
+
+        expect(raise_ex).toRaise(Exception, "<(^_^)>")
+        expect(dont_raise_ex).notToRaise(Exception)
+
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise, Exception, "<(^_^)>")
+        self.assertRaises(AssertionError, expect(raise_ex).toRaise, Exception, "[(-.-)]")
+
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise, Exception)
 
     def test_toHaveBeenCalled(self):
         obj = TempClass()
