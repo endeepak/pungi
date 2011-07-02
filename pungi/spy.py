@@ -45,12 +45,15 @@ class Method(object):
     def __exit__(self, exc_type, exc_value, traceback):
         self._rollback()
 
+    @property
     def callCount(self):
         return len(self._calls)
 
+    @property
     def wasCalled(self):
-        return self.callCount() > 0
+        return self.callCount > 0
 
+    @property
     def mostRecentCall(self):
         return self._calls[-1]
 

@@ -101,4 +101,12 @@ class ToRaise(Base):
 class ToHaveBeenCalled(Base):
 
     def matches(self):
-        return self.actual.wasCalled()
+        return self.actual.wasCalled
+
+
+class ToHaveBeenCalledWith(Base):
+
+    def matches(self, *args, **kwargs):
+        return (self.actual.wasCalled and
+               self.actual.mostRecentCall.args == args and
+               self.actual.mostRecentCall.kwargs == kwargs)

@@ -30,7 +30,7 @@ class SpyMethodTest(unittest.TestCase):
         obj = TempClass()
         spyOn(obj, 'hello')
 
-        self.assertEqual(obj.hello.callCount(), 0)
+        self.assertEqual(obj.hello.callCount, 0)
 
     def test_call_count_after_call(self):
         obj = TempClass()
@@ -39,14 +39,14 @@ class SpyMethodTest(unittest.TestCase):
         obj.hello()
         obj.hello()
 
-        self.assertEqual(obj.hello.callCount(), 2)
+        self.assertEqual(obj.hello.callCount, 2)
 
     def test_was_called_before_call(self):
         obj = TempClass()
 
         spyOn(obj, 'hello')
 
-        self.assertFalse(obj.hello.wasCalled())
+        self.assertFalse(obj.hello.wasCalled)
 
     def test_was_called_before_call(self):
         obj = TempClass()
@@ -54,7 +54,7 @@ class SpyMethodTest(unittest.TestCase):
 
         obj.hello()
 
-        self.assertTrue(obj.hello.wasCalled())
+        self.assertTrue(obj.hello.wasCalled)
 
     def test_spy_is_on_inside_the_with_block(self):
         obj = TempClass()
@@ -90,7 +90,7 @@ class SpyMethodTest(unittest.TestCase):
         spyOn(obj, 'hello', callThrough=True)
 
         self.assertEqual(obj.hello(), "hello")
-        self.assertEqual(obj.hello.callCount(), 1)
+        self.assertEqual(obj.hello.callCount, 1)
 
     def test_call_through_for_andCallThrough_syntax(self):
         obj = TempClass()
@@ -98,7 +98,7 @@ class SpyMethodTest(unittest.TestCase):
         spyOn(obj, 'hello').andCallThrough()
 
         self.assertEqual(obj.hello(), "hello")
-        self.assertEqual(obj.hello.callCount(), 1)
+        self.assertEqual(obj.hello.callCount, 1)
 
     def test_call_fake(self):
         obj = TempClass()
@@ -109,7 +109,7 @@ class SpyMethodTest(unittest.TestCase):
         spyOn(obj, 'hello', callFake=fake_hello)
 
         self.assertEqual(obj.hello(), "fake hello")
-        self.assertEqual(obj.hello.callCount(), 1)
+        self.assertEqual(obj.hello.callCount, 1)
 
     def test_call_fake_for_andCallFakeSyntax(self):
         obj = TempClass()
@@ -120,7 +120,7 @@ class SpyMethodTest(unittest.TestCase):
         spyOn(obj, 'hello').andCallFake(fake_hello)
 
         self.assertEqual(obj.hello(), "fake hello")
-        self.assertEqual(obj.hello.callCount(), 1)
+        self.assertEqual(obj.hello.callCount, 1)
 
     def test_most_recent_call_args(self):
         obj = TempClass()
@@ -128,7 +128,7 @@ class SpyMethodTest(unittest.TestCase):
 
         obj.hello("h", "e", "l", "l", "o")
 
-        self.assertEqual(obj.hello.mostRecentCall().args,
+        self.assertEqual(obj.hello.mostRecentCall.args,
                         ("h", "e", "l", "l", "o"))
 
     def test_most_recent_call_kwargs(self):
@@ -137,7 +137,7 @@ class SpyMethodTest(unittest.TestCase):
 
         obj.hello(say="hello")
 
-        self.assertEqual(obj.hello.mostRecentCall().kwargs, dict(say="hello"))
+        self.assertEqual(obj.hello.mostRecentCall.kwargs, dict(say="hello"))
 
     def test_args_for_call(self):
         obj = TempClass()

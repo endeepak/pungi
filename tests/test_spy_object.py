@@ -17,7 +17,7 @@ class SpyObjectTest(unittest.TestCase):
 
         spyObj.hello()
 
-        self.assertEqual(spyObj.hello.callCount(), 1)
+        self.assertEqual(spyObj.hello.callCount, 1)
 
     def test_spy_method_return_value(self):
         spyObj = createSpy('greeter', hello="say hello", hi="say hi")

@@ -8,6 +8,7 @@ class TempClass(object):
     def hello(self):
         return "hello"
 
+
 class CustomException(Exception):
     pass
 
@@ -125,6 +126,21 @@ class TestMatchers(unittest.TestCase):
                           expect(obj.hello).notToHaveBeenCalled)
         self.assertRaises(AssertionError,
                           expect(obj.hi).toHaveBeenCalled)
+
+
+    def test_toHaveBeenCalledWith(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+        spyOn(obj, 'hi')
+        obj.hello(1, to=2)
+
+        expect(obj.hello).toHaveBeenCalledWith(1, to=2)
+        expect(obj.hi).notToHaveBeenCalledWith(1, to=2)
+
+        self.assertRaises(AssertionError,
+                          expect(obj.hello).notToHaveBeenCalledWith, 1, to=2)
+        self.assertRaises(AssertionError,
+                          expect(obj.hi).toHaveBeenCalledWith, 1, to=2)
 
 
 if __name__ == '__main__':
