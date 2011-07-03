@@ -49,9 +49,16 @@ class Method(object):
     def callCount(self):
         return len(self._calls)
 
-    @property
-    def wasCalled(self):
+    def wasCalled(self, times=None):
+        if(times is not None):
+            return self.callCount == times
         return self.callCount > 0
+
+    def wasCalledWith(self, *args, **kwargs):
+        for call in self._calls:
+            if(call.received(*args, **kwargs)):
+                return True
+        return False
 
     @property
     def mostRecentCall(self):
@@ -89,6 +96,8 @@ class Call(object):
         self.args = args
         self.kwargs = kwargs
 
+    def received(self, *args, **kwargs):
+        return (self.args, self.kwargs) == (args, kwargs)
 
 class Object(object):
 

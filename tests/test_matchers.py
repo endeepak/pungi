@@ -127,6 +127,16 @@ class TestMatchers(unittest.TestCase):
         self.assertRaises(AssertionError,
                           expect(obj.hi).toHaveBeenCalled)
 
+    def test_toHaveBeenCalledTimes(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello()
+        obj.hello()
+
+        expect(obj.hello).toHaveBeenCalled(times=2)
+        self.assertRaises(AssertionError,
+                          expect(obj.hello).toHaveBeenCalled, times=1)
 
     def test_toHaveBeenCalledWith(self):
         obj = TempClass()

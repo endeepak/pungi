@@ -98,15 +98,14 @@ class ToRaise(Base):
             if(issubclass(ex_type, expectedException) and (message is None or ex.args[0] == message)):
                 return True
 
+
 class ToHaveBeenCalled(Base):
 
-    def matches(self):
-        return self.actual.wasCalled
+    def matches(self, times=None):
+        return self.actual.wasCalled(times=times)
 
 
 class ToHaveBeenCalledWith(Base):
 
     def matches(self, *args, **kwargs):
-        return (self.actual.wasCalled and
-               self.actual.mostRecentCall.args == args and
-               self.actual.mostRecentCall.kwargs == kwargs)
+        return self.actual.wasCalledWith(*args, **kwargs)

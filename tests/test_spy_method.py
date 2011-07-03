@@ -46,15 +46,35 @@ class SpyMethodTest(unittest.TestCase):
 
         spyOn(obj, 'hello')
 
-        self.assertFalse(obj.hello.wasCalled)
+        self.assertFalse(obj.hello.wasCalled())
 
-    def test_was_called_before_call(self):
+    def test_was_called_after_call(self):
         obj = TempClass()
         spyOn(obj, 'hello')
 
         obj.hello()
 
-        self.assertTrue(obj.hello.wasCalled)
+        self.assertTrue(obj.hello.wasCalled())
+
+    def test_was_called_times(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello()
+        obj.hello()
+
+        self.assertTrue(obj.hello.wasCalled(times = 2))
+
+    def test_was_called_with(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello(1)
+        obj.hello(1, to=2)
+
+        self.assertTrue(obj.hello.wasCalledWith(1))
+        self.assertTrue(obj.hello.wasCalledWith(1, to=2))
+        self.assertFalse(obj.hello.wasCalledWith(2))
 
     def test_spy_is_on_inside_the_with_block(self):
         obj = TempClass()
