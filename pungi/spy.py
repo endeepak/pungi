@@ -45,6 +45,9 @@ class Method(object):
     def __exit__(self, exc_type, exc_value, traceback):
         self._rollback()
 
+    def __repr__(self):
+        return "{0}.{1}".format(repr(self._target), self._methodName)
+
     @property
     def callCount(self):
         return len(self._calls)

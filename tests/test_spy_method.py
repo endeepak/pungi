@@ -187,6 +187,11 @@ class SpyMethodTest(unittest.TestCase):
 
         self.assertEqual(obj.hello(), "hello")
 
+    def test_repr(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        self.assertEqual(repr(obj.hello), "{0}.hello".format(repr(obj)))
 
 if __name__ == '__main__':
     unittest.main()
