@@ -1,5 +1,3 @@
-* Hiding framework stack trace on test failure
-
 ##Spy
 
 * Tracking spy call orders

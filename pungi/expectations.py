@@ -1,6 +1,8 @@
 import matchers
 import types
 
+__unittest = True
+
 
 class Expectation(object):
 
