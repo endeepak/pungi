@@ -21,7 +21,6 @@ setup(name='pungi',
                     'Operating System :: OS Independent',
                     'Development Status :: 3 - Alpha',
                     'Intended Audience :: Developers',
-                    'Topic :: Software Development :: Testing',
-                    'Topic :: Software Development :: Mocking'
+                    'Topic :: Software Development :: Testing'
                     ]
      )
