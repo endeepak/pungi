@@ -1,6 +1,7 @@
 import unittest
-from expectations import Expectation
-from pungi import spy
+from .expectations import Expectation
+from .spy import Method, Object
+from .matchers import Base as MatcherBase, add
 
 
 def expect(actual, *args, **kwargs):
@@ -9,12 +10,15 @@ def expect(actual, *args, **kwargs):
 
 def spyOn(target, methodName, **kwargs):
     originalMethod = getattr(target, methodName, None)
-    return spy.Method.create(target, methodName, originalMethod, **kwargs)
+    return Method.create(target, methodName, originalMethod, **kwargs)
 
 
 def createSpy(name=None, **methodsWithReturnValue):
-    return spy.Object.create(name, **methodsWithReturnValue)
+    return Object.create(name, **methodsWithReturnValue)
 
 
 def stopSpying():
-    spy.Method.stop()
+    Method.stop()
+
+
+add(*MatcherBase.__subclasses__())

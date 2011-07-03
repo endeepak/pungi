@@ -1,6 +1,3 @@
-import matchers
-import types
-
 __unittest = True
 
 
@@ -33,17 +30,3 @@ class Expectation(object):
 
         setattr(cls, method_name, matcher_function)
         setattr(cls, negated_method_name, negated_matcher_function)
-
-
-Expectation.addMatcher(matchers.ToBe)
-Expectation.addMatcher(matchers.ToEqual)
-Expectation.addMatcher(matchers.ToBeNone)
-Expectation.addMatcher(matchers.ToBeTruthy)
-Expectation.addMatcher(matchers.ToBeFalsy)
-Expectation.addMatcher(matchers.ToMatch)
-Expectation.addMatcher(matchers.ToContain)
-Expectation.addMatcher(matchers.ToBeGreaterThan)
-Expectation.addMatcher(matchers.ToBeLessThan)
-Expectation.addMatcher(matchers.ToRaise)
-Expectation.addMatcher(matchers.ToHaveBeenCalled)
-Expectation.addMatcher(matchers.ToHaveBeenCalledWith)

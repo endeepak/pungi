@@ -1,6 +1,12 @@
-from pungi import string
 import re
 import sys
+from .string import humanize, pp
+from .expectations import Expectation
+
+
+def add(*matchers):
+    for matcher in matchers:
+        Expectation.addMatcher(matcher)
 
 
 class Base(object):
@@ -17,15 +23,15 @@ class Base(object):
     def message(self):
         ''' Override this to provide failure message'''
         name = self.__class__.__name__
-        return "{0} {1}".format(string.humanize(name),
-                        string.pp(*self.expectedArgs, **self.expectedKwArgs))
+        return "{0} {1}".format(humanize(name),
+                        pp(*self.expectedArgs, **self.expectedKwArgs))
 
     def matches(self):
         ''' Override this to verify assert'''
         pass
 
 
-class NegativeMatcher(Base):
+class NegativeMatcher(object):
 
     def __init__(self, assertion):
         self.assertion = assertion
@@ -43,8 +49,10 @@ class ToBe(Base):
         return self.actual == expected
 
 
-class ToEqual(ToBe):
-    pass
+class ToEqual(Base):
+
+    def matches(self, expected):
+        return self.actual == expected
 
 
 class ToBeNone(Base):
