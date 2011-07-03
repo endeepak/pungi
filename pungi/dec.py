@@ -7,7 +7,7 @@ def test(method):
 
 def testcase(cls):
     methods = cls.__dict__.keys()
-    test_methods = filter(lambda name: name.startswith("test_"), methods)
+    test_methods = filter(lambda method_name: "test" in method_name, methods)
     for method_name in test_methods:
         _decorate(cls, method_name)
     return cls

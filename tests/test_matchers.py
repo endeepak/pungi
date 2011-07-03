@@ -95,8 +95,10 @@ class TestMatchers(unittest.TestCase):
         expect(raise_ex).toRaise(CustomException)
         expect(dont_raise_ex).notToRaise(CustomException)
 
-        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise, CustomException)
-        self.assertRaises(AssertionError, expect(raise_ex).notToRaise, CustomException)
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise,
+                                            CustomException)
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise,
+                                            CustomException)
 
     def test_ToRaiseExceptionWithMessage(self):
         def raise_ex():
@@ -108,10 +110,13 @@ class TestMatchers(unittest.TestCase):
         expect(raise_ex).toRaise(Exception, "<(^_^)>")
         expect(dont_raise_ex).notToRaise(Exception)
 
-        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise, Exception, "<(^_^)>")
-        self.assertRaises(AssertionError, expect(raise_ex).toRaise, Exception, "[(-.-)]")
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise,
+                                                    Exception, "<(^_^)>")
+        self.assertRaises(AssertionError, expect(raise_ex).toRaise,
+                                                    Exception, "[(-.-)]")
 
-        self.assertRaises(AssertionError, expect(raise_ex).notToRaise, Exception)
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise,
+                                                    Exception)
 
     def test_toHaveBeenCalled(self):
         obj = TempClass()

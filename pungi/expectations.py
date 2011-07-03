@@ -24,10 +24,12 @@ class Expectation(object):
         negated_method_name = "not" + matcher_name
 
         def matcher_function(self, *expectedArgs, **expectedKwArgs):
-            self.verify(matcherClass(self.actual, *expectedArgs, **expectedKwArgs))
+            self.verify(matcherClass(self.actual, *expectedArgs,
+                                    **expectedKwArgs))
 
         def negated_matcher_function(self, *expectedArgs, **expectedKwArgs):
-            self.verify(matcherClass(self.actual, *expectedArgs, **expectedKwArgs).negated)
+            self.verify(matcherClass(self.actual, *expectedArgs,
+                                                 **expectedKwArgs).negated)
 
         setattr(cls, method_name, matcher_function)
         setattr(cls, negated_method_name, negated_matcher_function)

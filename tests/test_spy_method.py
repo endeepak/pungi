@@ -63,7 +63,7 @@ class SpyMethodTest(unittest.TestCase):
         obj.hello()
         obj.hello()
 
-        self.assertTrue(obj.hello.wasCalled(times = 2))
+        self.assertTrue(obj.hello.wasCalled(times=2))
 
     def test_was_called_with(self):
         obj = TempClass()

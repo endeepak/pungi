@@ -2,6 +2,7 @@ from pungi import string
 import re
 import sys
 
+
 class Base(object):
 
     def __init__(self, actual, *expectedArgs, **expectedKwArgs):
@@ -17,7 +18,7 @@ class Base(object):
         ''' Override this to provide failure message'''
         name = self.__class__.__name__
         return "{0} {1}".format(string.humanize(name),
-                            string.pp(*self.expectedArgs, **self.expectedKwArgs))
+                        string.pp(*self.expectedArgs, **self.expectedKwArgs))
 
     def matches(self):
         ''' Override this to verify assert'''
@@ -95,7 +96,8 @@ class ToRaise(Base):
             self.actual()
         except:
             ex_type, ex = sys.exc_info()[:2]
-            if(issubclass(ex_type, expectedException) and (message is None or ex.args[0] == message)):
+            if(issubclass(ex_type, expectedException) and
+                    (message is None or ex.args[0] == message)):
                 return True
 
 

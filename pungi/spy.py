@@ -99,6 +99,7 @@ class Call(object):
     def received(self, *args, **kwargs):
         return (self.args, self.kwargs) == (args, kwargs)
 
+
 class Object(object):
 
     @classmethod
