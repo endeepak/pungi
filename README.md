@@ -24,6 +24,8 @@ Mocking with spies
 
 This mocking library is based on AAA(Arrange Act Assert) pattern. It is built to be simple and easy to use without having to know about how the internals work.
 
+        from pungi import spyOn, createSpy, expect
+
 Mocking a class/instance method
 -------------------------------
 
@@ -169,3 +171,7 @@ Contributing
 * Issues and feature requests can be added [here](https://github.com/endeepak/pungi/issues/new)
 
 * If an issue can reproduced in the form of a test, fork the project and raise a [pull request](https://github.com/endeepak/pungi/pull/new/master)
+
+Miscellaneous
+=============
+This library has been tested with python 2.6 and unittest framework. It may(more likely!) or may not work with other versions of python or other testing frameworks.
