@@ -23,21 +23,21 @@ class Method(object):
         self._target = target
         self._methodName = methodName
         self._originalMethod = originalMethod
-        self._returnValue = returnValue
         self._calls = []
-        self._raiseException = raiseException
-        self._callThrough = callThrough
-        self._callFake = callFake
+        self.returnValue = returnValue or Object(methodName)
+        self.raiseException = raiseException
+        self.callThrough = callThrough
+        self.callFake = callFake
 
     def __call__(self, *args, **kwargs):
         self._calls.append(Call(args, kwargs))
-        if(self._callThrough):
+        if(self.callThrough):
             return self._originalMethod()
-        if(self._callFake):
-            return self._callFake()
-        if(self._raiseException is not None):
-            raise self._raiseException
-        return self._returnValue
+        if(self.callFake):
+            return self.callFake()
+        if(self.raiseException is not None):
+            raise self.raiseException
+        return self.returnValue
 
     def __enter__(self):
         pass
@@ -74,19 +74,19 @@ class Method(object):
         return self._calls[callIndex].kwargs
 
     def andReturn(self, returnValue):
-        self._returnValue = returnValue
+        self.returnValue = returnValue
         return self
 
     def andRaise(self, excpetion):
-        self._raiseException = excpetion
+        self.raiseException = excpetion
         return self
 
     def andCallThrough(self):
-        self._callThrough = True
+        self.callThrough = True
         return self
 
     def andCallFake(self, fakeMethod):
-        self._callFake = fakeMethod
+        self.callFake = fakeMethod
         return self
 
     def _rollback(self):
@@ -117,3 +117,6 @@ class Object(object):
 
     def __getattr__(self, attr_name):
         return Method.create(self, attr_name)
+
+    def __str__(self):
+        return "<spy name={0}>".format(self.name)

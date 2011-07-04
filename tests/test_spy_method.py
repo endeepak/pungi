@@ -19,6 +19,14 @@ class SpyMethodTest(unittest.TestCase):
 
         self.assertEqual(obj.hello(), "spy says hello")
 
+    def test_explicit_return_value(self):
+        obj = TempClass()
+
+        spyOn(obj, 'hello')
+        obj.hello.returnValue = "spy says hello"
+
+        self.assertEqual(obj.hello(), "spy says hello")
+
     def test_return_value_for_andReturn_syntax(self):
         obj = TempClass()
 
@@ -97,6 +105,14 @@ class SpyMethodTest(unittest.TestCase):
 
         self.assertRaises(Exception, obj.hello)
 
+    def test_explict_declaration_of_raise_exception(self):
+        obj = TempClass()
+
+        spyOn(obj, 'hello')
+        obj.hello.raiseException = Exception
+
+        self.assertRaises(Exception, obj.hello)
+
     def test_raises_exception_for_andRaise_syntax(self):
         obj = TempClass()
 
@@ -112,12 +128,33 @@ class SpyMethodTest(unittest.TestCase):
         self.assertEqual(obj.hello(), "hello")
         self.assertEqual(obj.hello.callCount, 1)
 
+    def test_explicit_call_through(self):
+        obj = TempClass()
+
+        spyOn(obj, 'hello')
+        obj.hello.callThrough = True
+
+        self.assertEqual(obj.hello(), "hello")
+        self.assertEqual(obj.hello.callCount, 1)
+
     def test_call_through_for_andCallThrough_syntax(self):
         obj = TempClass()
 
         spyOn(obj, 'hello').andCallThrough()
 
         self.assertEqual(obj.hello(), "hello")
+        self.assertEqual(obj.hello.callCount, 1)
+
+    def test_explicit_call_fake(self):
+        obj = TempClass()
+
+        def fake_hello():
+            return "fake hello"
+
+        spyOn(obj, 'hello')
+        obj.hello.callFake = fake_hello
+
+        self.assertEqual(obj.hello(), "fake hello")
         self.assertEqual(obj.hello.callCount, 1)
 
     def test_call_fake(self):
@@ -181,7 +218,7 @@ class SpyMethodTest(unittest.TestCase):
 
     def test_stop(self):
         obj = TempClass()
-        spyOn(obj, 'hello', returnValue="spy says helloe")
+        spyOn(obj, 'hello', returnValue="spy says hello")
 
         spy.Method.stop()
 
@@ -192,6 +229,16 @@ class SpyMethodTest(unittest.TestCase):
         spyOn(obj, 'hello')
 
         self.assertEqual(repr(obj.hello), "{0}.hello".format(repr(obj)))
+
+    def test_method_chaining(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+
+        obj.hello().world().wassup()
+
+        self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello().world.callCount, 1)
+        self.assertEqual(obj.hello().world().wassup.callCount, 1)
 
 if __name__ == '__main__':
     unittest.main()

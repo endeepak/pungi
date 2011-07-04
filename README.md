@@ -103,6 +103,13 @@ The spies can be cleared in few ways:
 
 * Add a teardown method which calls *pungi.stopSpying()*
 
+* Use spy inside a *with* block
+
+        with spyOn(x, 'method', returnValue=foo):
+              x.method() # returns foo
+
+        x.method() # returns actual value
+
 Creating mock/stub objects
 --------------------------
 
@@ -114,9 +121,34 @@ The createSpy method creates a mock/stub object with an optional name, this obje
 
         expect(x.say_hello).wasCalledWith(to='world')
 
-The assertion syntax remains the same. Cleaning up spy objects is same as above. The individual methods on spy object can be setup using *spyOn* method shown above. The alternate syntax for setting up methods with return values is:
+The assertion syntax remains the same. Cleaning up spy objects is same as above. The individual methods on spy object can be setup using *spyOn* method shown above. The alternate syntax for setting up multiple methods with return values is:
 
         x = createSpy("person", age=20, balance=20000)
+
+or you can configure individual methods
+
+       x.age.returnValue = 20
+       x.foo.callFake = fake_method
+       x.bar.raiseException = SomeException
+
+Chaining methods and spies
+--------------------------
+
+The spied methods return *spy objects* by default. Hence you need to define a spy only once in the complete method chain.
+
+      spyOn(x, 'method')
+
+      x.method().another_method().foo()
+
+      x.method.callCount # 1
+      x.method().another_method.callCount # 1
+      x.method().another_method().foo.callCount # 1
+
+The behavior is same for spies created using *createSpy* method.
+
+      greeter = createSpy('greeter')
+
+      greeter.say().hello().to().world()
 
 
 Using expect matchers
@@ -144,6 +176,8 @@ There are several inbuilt assertion matchers apart from the spy expectation matc
 
 All the above matchers have corresponding negative('notTo') matchers.
 
+        expect(foo).notToBe(bar)
+
 Adding custom matchers
 ----------------------
 
@@ -162,7 +196,7 @@ The matcher is used as
         expect(foo).toHaveAttr('bar')
         expect(foo).notToHaveAttr('qux')
 
-More examples can be found [here](https://github.com/endeepak/pungi/blob/master/pungi/matchers.py)
+More examples on defining a matcher can be found [here](https://github.com/endeepak/pungi/blob/master/pungi/matchers.py)
 
 
 Contributing
@@ -174,4 +208,4 @@ Contributing
 
 Miscellaneous
 =============
-This library has been tested with python 2.6 and unittest framework. It may(more likely!) or may not work with other versions of python or other testing frameworks.
+This library has been tested with python 2.6 and unittest framework. It may(more likely!) or may not work with other versions of python or other testing frameworks. If you notice any failures, please report the issue [here](https://github.com/endeepak/pungi/issues/new).
