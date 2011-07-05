@@ -19,7 +19,7 @@ setup(name='pungi',
                     'Programming Language :: Python',
                     'License :: OSI Approved :: MIT License',
                     'Operating System :: OS Independent',
-                    'Development Status :: 3 - Alpha',
+                    'Development Status :: 4 - Beta',
                     'Intended Audience :: Developers',
                     'Topic :: Software Development :: Testing'
                     ]
