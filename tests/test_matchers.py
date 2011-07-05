@@ -157,6 +157,22 @@ class TestMatchers(unittest.TestCase):
         self.assertRaises(AssertionError,
                           expect(obj.hi).toHaveBeenCalledWith, 1, to=2)
 
+    def test_toHaveBeenCalledBefore(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+        spyOn(obj, 'hi')
+
+        obj.hi()
+        obj.hello()
+
+        expect(obj.hi).toHaveBeenCalledBefore(obj.hello)
+        expect(obj.hello).notToHaveBeenCalledBefore(obj.hi)
+
+        self.assertRaises(AssertionError,
+                          expect(obj.hi).notToHaveBeenCalledBefore, obj.hello)
+        self.assertRaises(AssertionError,
+                          expect(obj.hello).toHaveBeenCalledBefore, obj.hi)
+
 
 if __name__ == '__main__':
     unittest.main()

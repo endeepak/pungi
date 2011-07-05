@@ -5,6 +5,10 @@ Simple and powerful mocking framework with extensible assertion matchers (Inspir
 
 [define:pungi](http://www.google.com/search?q=define:pungi)
 
+This documentation is for the latest code on this branch. For earlier versions, refer to corresponding tags.
+
+[v0.1.0](https://github.com/endeepak/pungi/tree/v0.1.0), [v0.1.1](https://github.com/endeepak/pungi/tree/v0.1.1)
+
 Install
 =======
 
@@ -72,15 +76,15 @@ Same can be done with alternate syntax
 
 The spied method contains useful methods
 
-        x.method.callCount
+        x.method.callCount # Number of times x.method() was called
 
         x.method.mostRecentCall
-        x.method.mostRecentCall.received(*args, **kwargs)
-        x.method.mostRecentCall.args
-        x.method.mostRecentCall.kwargs
+        x.method.mostRecentCall.received(*args, **kwargs) # True or False
+        x.method.mostRecentCall.args # Positional arguments(*args) passed to the method
+        x.method.mostRecentCall.kwargs # Named arguments(**kwargs) passed to the method
 
-        x.method.argsForCall(index)
-        x.method.kwargsForCall(index)
+        x.method.argsForCall(index) # args for nth call
+        x.method.kwargsForCall(index) # kwargs for nth call
 
 Mocking a class method is same as above:
 
@@ -149,6 +153,22 @@ The behavior is same for spies created using *createSpy* method.
       greeter = createSpy('greeter')
 
       greeter.say().hello().to().world()
+
+
+Asserting the order in which methods are called
+-----------------------------------------------
+
+The method call order is tracked for every test. This order can be accessed as
+
+      x.method.callNumber # Number indicating global order in which x.method was called
+
+It can asserted be as
+
+      expect(obj.hi).toHaveBeenCalledBefore(obj.hello)
+
+      or
+
+      assertTrue(obj.hi.wasCalledBefore(obj.hello))
 
 
 Using expect matchers

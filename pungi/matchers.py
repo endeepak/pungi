@@ -119,3 +119,9 @@ class ToHaveBeenCalledWith(Base):
 
     def matches(self, *args, **kwargs):
         return self.actual.wasCalledWith(*args, **kwargs)
+
+
+class ToHaveBeenCalledBefore(Base):
+
+    def matches(self, method):
+        return self.actual.wasCalledBefore(method)

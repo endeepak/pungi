@@ -2,6 +2,7 @@ import unittest
 from pungi import spy
 from pungi import spyOn
 from pungi import expect
+from pungi import dec
 
 
 class TempClass(object):
@@ -10,6 +11,7 @@ class TempClass(object):
         return "hello"
 
 
+@dec.testcase
 class SpyMethodTest(unittest.TestCase):
 
     def test_return_value(self):
@@ -83,6 +85,17 @@ class SpyMethodTest(unittest.TestCase):
         self.assertTrue(obj.hello.wasCalledWith(1))
         self.assertTrue(obj.hello.wasCalledWith(1, to=2))
         self.assertFalse(obj.hello.wasCalledWith(2))
+
+    def test_was_called_before(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+        spyOn(obj, 'hi')
+
+        obj.hi()
+        obj.hello()
+
+        self.assertTrue(obj.hi.wasCalledBefore(obj.hello))
+        self.assertFalse(obj.hello.wasCalledBefore(obj.hi))
 
     def test_spy_is_on_inside_the_with_block(self):
         obj = TempClass()
@@ -239,6 +252,20 @@ class SpyMethodTest(unittest.TestCase):
         self.assertEqual(obj.hello.callCount, 1)
         self.assertEqual(obj.hello().world.callCount, 1)
         self.assertEqual(obj.hello().world().wassup.callCount, 1)
+
+    def test_call_number(self):
+        obj = TempClass()
+        spyOn(obj, 'hello')
+        spyOn(obj, 'hi')
+        spyOn(obj, 'namaste')
+
+        obj.hi()
+        obj.namaste()
+        obj.hello()
+
+        self.assertEqual(obj.hi.callNumber, 1)
+        self.assertEqual(obj.namaste.callNumber, 2)
+        self.assertEqual(obj.hello.callNumber, 3)
 
 if __name__ == '__main__':
     unittest.main()

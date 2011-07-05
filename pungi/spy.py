@@ -1,3 +1,6 @@
+_CALL_NUMBER = 1
+
+
 class Method(object):
     _all = []
 
@@ -14,9 +17,11 @@ class Method(object):
 
     @classmethod
     def stop(cls):
+        global _CALL_NUMBER
         for spy in cls._all:
             spy._rollback()
         del cls._all[:]
+        _CALL_NUMBER = 1
 
     def __init__(self, target, methodName, originalMethod, returnValue=None,
                 raiseException=None, callThrough=False, callFake=None):
@@ -30,7 +35,7 @@ class Method(object):
         self.callFake = callFake
 
     def __call__(self, *args, **kwargs):
-        self._calls.append(Call(args, kwargs))
+        self._record_call(args, kwargs)
         if(self.callThrough):
             return self._originalMethod()
         if(self.callFake):
@@ -38,6 +43,11 @@ class Method(object):
         if(self.raiseException is not None):
             raise self.raiseException
         return self.returnValue
+
+    def _record_call(self, args, kwargs):
+        global _CALL_NUMBER
+        self._calls.append(Call(args, kwargs, _CALL_NUMBER))
+        _CALL_NUMBER += 1
 
     def __enter__(self):
         pass
@@ -57,6 +67,9 @@ class Method(object):
             return self.callCount == times
         return self.callCount > 0
 
+    def wasCalledBefore(self, method):
+        return self.callNumber < method.callNumber
+
     def wasCalledWith(self, *args, **kwargs):
         for call in self._calls:
             if(call.received(*args, **kwargs)):
@@ -72,6 +85,10 @@ class Method(object):
 
     def kwargsForCall(self, callIndex):
         return self._calls[callIndex].kwargs
+
+    @property
+    def callNumber(self):
+        return self.mostRecentCall.number
 
     def andReturn(self, returnValue):
         self.returnValue = returnValue
@@ -95,9 +112,10 @@ class Method(object):
 
 class Call(object):
 
-    def __init__(self, args, kwargs):
+    def __init__(self, args, kwargs, number):
         self.args = args
         self.kwargs = kwargs
+        self.number = number
 
     def received(self, *args, **kwargs):
         return (self.args, self.kwargs) == (args, kwargs)
