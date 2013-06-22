@@ -10,6 +10,12 @@ class TempClass(object):
     def hello(self):
         return "hello"
 
+    def hello_world(self, message):
+        return message
+
+    def test(self, message):
+        return message
+
 
 @dec.testcase
 class SpyMethodTest(unittest.TestCase):
@@ -137,26 +143,36 @@ class SpyMethodTest(unittest.TestCase):
         obj = TempClass()
 
         spyOn(obj, 'hello', callThrough=True)
+        spyOn(obj, 'hello_world', callThrough=True)
 
         self.assertEqual(obj.hello(), "hello")
         self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello_world("hello world"), "hello world")
+        self.assertEqual(obj.hello_world.callCount, 1)
 
     def test_explicit_call_through(self):
         obj = TempClass()
 
         spyOn(obj, 'hello')
         obj.hello.callThrough = True
+        spyOn(obj, 'hello_world')
+        obj.hello_world.callThrough = True
 
         self.assertEqual(obj.hello(), "hello")
         self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello_world("hello world"), "hello world")
+        self.assertEqual(obj.hello_world.callCount, 1)
 
     def test_call_through_for_andCallThrough_syntax(self):
         obj = TempClass()
 
         spyOn(obj, 'hello').andCallThrough()
+        spyOn(obj, 'hello_world').andCallThrough()
 
         self.assertEqual(obj.hello(), "hello")
         self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello_world("hello world"), "hello world")
+        self.assertEqual(obj.hello_world.callCount, 1)
 
     def test_explicit_call_fake(self):
         obj = TempClass()
@@ -164,11 +180,26 @@ class SpyMethodTest(unittest.TestCase):
         def fake_hello():
             return "fake hello"
 
+        def fake_hello_world(message):
+            return message
+
+        class FakeTempClass(object):
+            def test(self, message):
+                return message
+
         spyOn(obj, 'hello')
         obj.hello.callFake = fake_hello
+        spyOn(obj, 'hello_world')
+        obj.hello_world.callFake = fake_hello_world
+        spyOn(obj, 'test')
+        obj.test.callFake = FakeTempClass().test
 
         self.assertEqual(obj.hello(), "fake hello")
         self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello_world("hello world"), "hello world")
+        self.assertEqual(obj.hello_world.callCount, 1)
+        self.assertEqual(obj.test("test"), "test")
+        self.assertEqual(obj.hello_world.callCount, 1)
 
     def test_call_fake(self):
         obj = TempClass()
@@ -176,10 +207,23 @@ class SpyMethodTest(unittest.TestCase):
         def fake_hello():
             return "fake hello"
 
+        def fake_hello_world(message):
+            return message
+
+        class FakeTempClass(object):
+            def test(self, message):
+                return message
+
         spyOn(obj, 'hello', callFake=fake_hello)
+        spyOn(obj, 'hello_world', callFake=fake_hello_world)
+        spyOn(obj, 'test', callFake=FakeTempClass().test)
 
         self.assertEqual(obj.hello(), "fake hello")
         self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello_world("hello world"), "hello world")
+        self.assertEqual(obj.hello_world.callCount, 1)
+        self.assertEqual(obj.test("test"), "test")
+        self.assertEqual(obj.hello_world.callCount, 1)
 
     def test_call_fake_for_andCallFakeSyntax(self):
         obj = TempClass()
@@ -187,10 +231,23 @@ class SpyMethodTest(unittest.TestCase):
         def fake_hello():
             return "fake hello"
 
+        def fake_hello_world(message):
+            return message
+
+        class FakeTempClass(object):
+            def test(self, message):
+                return message
+
         spyOn(obj, 'hello').andCallFake(fake_hello)
+        spyOn(obj, 'hello_world').andCallFake(fake_hello_world)
+        spyOn(obj, 'hello_world').andCallFake(FakeTempClass().test)
 
         self.assertEqual(obj.hello(), "fake hello")
         self.assertEqual(obj.hello.callCount, 1)
+        self.assertEqual(obj.hello_world("hello world"), "hello world")
+        self.assertEqual(obj.hello_world.callCount, 1)
+        self.assertEqual(obj.test("test"), "test")
+        self.assertEqual(obj.hello_world.callCount, 1)
 
     def test_most_recent_call_args(self):
         obj = TempClass()

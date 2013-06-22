@@ -16,18 +16,64 @@ class CustomException(Exception):
 class TestMatchers(unittest.TestCase):
 
     def test_toBe(self):
+        obj = CustomException('Test')
+        obj.data = {'foo': [{'bar': [True]}]}
+        ex = CustomException('Test')
+        ex.data = {'foo': [{'bar': [True]}]}
+
         expect(True).toBe(True)
+        expect(obj).toBe(obj)
         expect(True).notToBe(False)
+        expect(True).notToBe(1)
+        expect(obj).notToBe(ex)
 
         self.assertRaises(AssertionError, expect(True).toBe, False)
+        self.assertRaises(AssertionError, expect(True).toBe, 1)
+        self.assertRaises(AssertionError, expect(obj).toBe, ex)
         self.assertRaises(AssertionError, expect(True).notToBe, True)
+        self.assertRaises(AssertionError, expect(obj).notToBe, obj)
 
     def test_toEqual(self):
+        obj1 = CustomException('Test')
+        obj1.data = {'foo': [{'bar': [True]}]}
+        obj2 = CustomException('test')
+        obj2.data = {'foo': [{'bar': [True]}]}
+        obj3 = CustomException('Test')
+        obj3.data = {'foo': [{'bar': [1]}]}
+        ex = CustomException('Test')
+        ex.data = {'foo': [{'bar': [True]}]}
+
         expect(True).toEqual(True)
+        expect([True, False]).toEqual([True, False])
+        expect({'foo': [{'bar': [True]}]}).toEqual({'foo': [{'bar': [True]}]})
+        expect(obj1).toEqual(ex)
         expect(True).notToEqual(False)
+        expect({'foo': [{'bar': [True]}]}).notToEqual(\
+                {'foo': [{'bar': [False]}]})
+        expect([True, False]).notToEqual([False, True])
+        expect([True, False]).notToEqual([1, 0])
+        expect(CustomException('Test')).notToEqual(ex)
+        expect(obj2).notToEqual(ex)
+        expect(obj3).notToEqual(ex)
 
         self.assertRaises(AssertionError, expect(True).toEqual, False)
+        self.assertRaises(AssertionError,
+                expect({'foo': [{'bar': [True]}]}).toEqual,
+                {'foo': [{'bar': [False]}]})
+        self.assertRaises(AssertionError,
+                expect([True, False]).toEqual, [False, True])
+        self.assertRaises(AssertionError, expect([True, False]).toEqual, [1, 0])
+        self.assertRaises(AssertionError,
+                expect(CustomException('Test')).toEqual, ex)
+        self.assertRaises(AssertionError, expect(obj2).toEqual, ex)
+        self.assertRaises(AssertionError, expect(obj3).toEqual, ex)
         self.assertRaises(AssertionError, expect(True).notToEqual, True)
+        self.assertRaises(AssertionError,
+                expect([True, False]).notToEqual, [True, False])
+        self.assertRaises(AssertionError,
+                expect({'foo': [{'bar': [True]}]}).notToEqual,
+                {'foo': [{'bar': [True]}]})
+        self.assertRaises(AssertionError, expect(obj1).notToEqual, ex)
 
     def test_toBeNone(self):
         expect(None).toBeNone()
@@ -38,17 +84,51 @@ class TestMatchers(unittest.TestCase):
 
     def test_toBeTruthy(self):
         expect(True).toBeTruthy()
-        expect('foo').notToBeTruthy()
+        expect(1).toBeTruthy()
+        expect('foo').toBeTruthy()
+        expect([False]).toBeTruthy()
+        expect({'foo': False}).toBeTruthy()
+        expect(False).notToBeTruthy()
+        expect(None).notToBeTruthy()
+        expect(0).notToBeTruthy()
+        expect('').notToBeTruthy()
+        expect([]).notToBeTruthy()
+        expect({}).notToBeTruthy()
 
-        self.assertRaises(AssertionError, expect('foo').toBeTruthy)
+        self.assertRaises(AssertionError, expect(False).toBeTruthy)
+        self.assertRaises(AssertionError, expect(None).toBeTruthy)
+        self.assertRaises(AssertionError, expect(0).toBeTruthy)
+        self.assertRaises(AssertionError, expect('').toBeTruthy)
+        self.assertRaises(AssertionError, expect([]).toBeTruthy)
+        self.assertRaises(AssertionError, expect({}).toBeTruthy)
         self.assertRaises(AssertionError, expect(True).notToBeTruthy)
+        self.assertRaises(AssertionError, expect('foo').notToBeTruthy)
+        self.assertRaises(AssertionError, expect([False]).notToBeTruthy)
+        self.assertRaises(AssertionError, expect({'foo': False}).notToBeTruthy)
 
     def test_toBeFalsy(self):
-        expect(False).toBeFalsy()
+        expect(True).notToBeFalsy()
+        expect(1).notToBeFalsy()
         expect('foo').notToBeFalsy()
+        expect([False]).notToBeFalsy()
+        expect({'foo': False}).notToBeFalsy()
+        expect(False).toBeFalsy()
+        expect(None).toBeFalsy()
+        expect(0).toBeFalsy()
+        expect('').toBeFalsy()
+        expect([]).toBeFalsy()
+        expect({}).toBeFalsy()
 
+        self.assertRaises(AssertionError, expect(True).toBeFalsy)
         self.assertRaises(AssertionError, expect('foo').toBeFalsy)
+        self.assertRaises(AssertionError, expect([False]).toBeFalsy)
+        self.assertRaises(AssertionError, expect({'foo': False}).toBeFalsy)
         self.assertRaises(AssertionError, expect(False).notToBeFalsy)
+        self.assertRaises(AssertionError, expect(None).notToBeFalsy)
+        self.assertRaises(AssertionError, expect(0).notToBeFalsy)
+        self.assertRaises(AssertionError, expect('').notToBeFalsy)
+        self.assertRaises(AssertionError, expect([]).notToBeFalsy)
+        self.assertRaises(AssertionError, expect({}).notToBeFalsy)
 
     def test_toMatch(self):
         expect("abcd").toMatch(".*b.*")
@@ -85,6 +165,19 @@ class TestMatchers(unittest.TestCase):
         self.assertRaises(AssertionError, expect(2).toBeLessThan, 1)
         self.assertRaises(AssertionError, expect(1).notToBeLessThan, 2)
 
+    def test_ToRaise(self):
+        def raise_ex():
+            raise CustomException
+
+        def dont_raise_ex():
+            pass
+
+        expect(raise_ex).toRaise()
+        expect(dont_raise_ex).notToRaise()
+
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise)
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise)
+
     def test_ToRaiseException(self):
         def raise_ex():
             raise CustomException
@@ -99,6 +192,26 @@ class TestMatchers(unittest.TestCase):
                                             CustomException)
         self.assertRaises(AssertionError, expect(raise_ex).notToRaise,
                                             CustomException)
+
+    def test_ToRaiseExceptionInstance(self):
+        def raise_ex():
+            ex = CustomException("<(^_^)>")
+            ex.code = 1
+            raise ex
+
+        def dont_raise_ex():
+            pass
+
+        ex = CustomException("<(^_^)>")
+        ex.code = 1
+        expect(raise_ex).toRaise(ex)
+        expect(dont_raise_ex).notToRaise(ex)
+
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise, ex)
+        self.assertRaises(AssertionError, expect(raise_ex).toRaise,
+                                                    CustomException("<(^_^)>"))
+
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise)
 
     def test_ToRaiseExceptionWithMessage(self):
         def raise_ex():
@@ -117,6 +230,23 @@ class TestMatchers(unittest.TestCase):
 
         self.assertRaises(AssertionError, expect(raise_ex).notToRaise,
                                                     Exception)
+
+    def test_ToRaiseWithMessage(self):
+        def raise_ex():
+            raise CustomException("<(^_^)>")
+
+        def dont_raise_ex():
+            pass
+
+        expect(raise_ex).toRaise(None, "<(^_^)>")
+        expect(dont_raise_ex).notToRaise(None, "<(^_^)>")
+
+        self.assertRaises(AssertionError, expect(dont_raise_ex).toRaise,
+                                                    None, "<(^_^)>")
+        self.assertRaises(AssertionError, expect(raise_ex).toRaise,
+                                                    None, "[(-.-)]")
+
+        self.assertRaises(AssertionError, expect(raise_ex).notToRaise)
 
     def test_toHaveBeenCalled(self):
         obj = TempClass()

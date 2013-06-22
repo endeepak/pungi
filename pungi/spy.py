@@ -1,3 +1,6 @@
+import inspect
+
+
 _CALL_NUMBER = 1
 
 
@@ -37,8 +40,14 @@ class Method(object):
     def __call__(self, *args, **kwargs):
         self._record_call(args, kwargs)
         if(self.callThrough):
-            return self._originalMethod()
+            return self._originalMethod(*args, **kwargs)
         if(self.callFake):
+            argspec = inspect.getargspec(self.callFake)
+            if(len(argspec[0]) > 1 or
+                    not inspect.ismethod(self.callFake) and argspec[0] or
+                    argspec[1] is not None or
+                    argspec[2] is not None):
+                return self.callFake(*args, **kwargs)
             return self.callFake()
         if(self.raiseException is not None):
             raise self.raiseException

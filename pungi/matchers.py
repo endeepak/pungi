@@ -1,5 +1,6 @@
 import re
 import sys
+import inspect
 from .string import humanize, pp
 from .expectations import Expectation
 
@@ -46,13 +47,47 @@ class NegativeMatcher(object):
 class ToBe(Base):
 
     def matches(self, expected):
-        return self.actual == expected
+        return type(self.actual) == type(expected) and self.actual == expected
 
 
 class ToEqual(Base):
 
     def matches(self, expected):
-        return self.actual == expected
+        return(ToEqual.match(self.actual, expected) and
+                ToEqual.match(expected, self.actual))
+
+    @staticmethod
+    def match(actual, expected):
+        if(isinstance(expected, str)):
+            return ToBe(actual).matches(expected)
+        if(hasattr(expected, '__dict__')):
+            try:
+                for name, value in expected.__dict__.iteritems():
+                    try:
+                        actualValue = getattr(actual, name)
+                    except:
+                        return False
+                    if(not ToEqual.match(actualValue, value)):
+                        return False
+            except:
+                pass
+        try:
+            for i, item in enumerate(expected):
+                try:
+                    value = expected[item]
+                    key = item
+                except:
+                    value = item
+                    key = i
+                try:
+                    actualValue = actual[key]
+                except:
+                    return False
+                if(not ToEqual.match(actualValue, value)):
+                    return False
+        except:
+            return ToBe(actual).matches(expected)
+        return True
 
 
 class ToBeNone(Base):
@@ -64,13 +99,13 @@ class ToBeNone(Base):
 class ToBeTruthy(Base):
 
     def matches(self):
-        return self.actual is True
+        return True if self.actual else False
 
 
 class ToBeFalsy(Base):
 
     def matches(self):
-        return self.actual is False
+        return False if self.actual else True
 
 
 class ToMatch(Base):
@@ -99,14 +134,19 @@ class ToBeLessThan(Base):
 
 class ToRaise(Base):
 
-    def matches(self, expectedException, message=None):
+    def matches(self, expectedException=None, message=None):
         try:
             self.actual()
         except:
             ex_type, ex = sys.exc_info()[:2]
-            if(issubclass(ex_type, expectedException) and
-                    (message is None or ex.args[0] == message)):
-                return True
+            if(message is None or ex.args[0] == message):
+                if expectedException is None:
+                    return True
+                if(inspect.isclass(expectedException)):
+                    if issubclass(ex_type, expectedException):
+                        return True
+                elif(ToEqual(ex).matches(expectedException)):
+                    return True
 
 
 class ToHaveBeenCalled(Base):
