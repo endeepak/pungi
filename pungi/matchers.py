@@ -62,7 +62,7 @@ class ToEqual(Base):
             return ToBe(actual).matches(expected)
         if(hasattr(expected, '__dict__')):
             try:
-                for name, value in expected.__dict__.iteritems():
+                for name, value in expected.__dict__.items():
                     try:
                         actualValue = getattr(actual, name)
                     except:

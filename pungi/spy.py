@@ -135,7 +135,7 @@ class Object(object):
     @classmethod
     def create(cls, name, **methodsWithReturnValue):
         obj = cls(name)
-        for method, returnValue in methodsWithReturnValue.iteritems():
+        for method, returnValue in methodsWithReturnValue.items():
             Method.create(obj, method, returnValue=returnValue)
         return obj
 
