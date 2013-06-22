@@ -23,4 +23,5 @@ def _decorated(method):
     def decorator(self):
         method(self)
         pungi.stopSpying()
+    decorator.__name__ = method.__name__
     return decorator
