@@ -5,7 +5,7 @@ description = 'Simple and powerful mocking framework with '\
               'extensible assertion matchers'
 
 setup(name='pungi',
-      version='0.1.2',
+      version='0.1.3',
       description=description,
       long_description=description,
       author='Deepak N',
