@@ -1,4 +1,4 @@
-Pungi
+Pungi ![Build Status](https://travis-ci.org/endeepak/pungi.png)
 =====
 
 Simple and powerful mocking framework with extensible assertion matchers (Inspired by [jasmine](https://github.com/pivotal/jasmine/wiki/Spies) BDD framework)
@@ -226,6 +226,10 @@ Contributing
 
 * If an issue can reproduced in the form of a test, fork the project and raise a [pull request](https://github.com/endeepak/pungi/pull/new/master)
 
+Support
+=======
+The tests pass with python 2.6 and 2.7. Please check the [build matrix](https://travis-ci.org/endeepak/pungi) for more details.
+
 Miscellaneous
 =============
-This library has been tested with python 2.6 and unittest framework. It may(more likely!) or may not work with other versions of python or other testing frameworks. If you notice any failures, please report the issue [here](https://github.com/endeepak/pungi/issues/new).
+This library has been tested unittest framework. It may or may not work with other testing frameworks. If you notice any failures, please report the issue [here](https://github.com/endeepak/pungi/issues/new).
