@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Pungi by endeepak</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Pungi</h1>
+          <h2>Simple and powerful mocking framework with extensible assertion matchers (Inspired by jasmine BDD framework)</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/endeepak/pungi/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/endeepak/pungi/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/endeepak/pungi" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="pungi-" class="anchor" href="#pungi-"><span class="octicon octicon-link"></span></a>Pungi <img src="https://travis-ci.org/endeepak/pungi.png" alt="Build Status">
+</h1>
+
+<p>Simple and powerful mocking framework with extensible assertion matchers (Inspired by <a href="https://github.com/pivotal/jasmine/wiki/Spies">jasmine</a> BDD framework)</p>
+
+<p><a href="http://www.google.com/search?q=define:pungi">define:pungi</a></p>
+
+<p>This documentation is for the latest code on this branch. For earlier versions, refer to corresponding tags.</p>
+
+<p><a href="https://github.com/endeepak/pungi/tree/v0.1.0">v0.1.0</a>, <a href="https://github.com/endeepak/pungi/tree/v0.1.1">v0.1.1</a></p>
+
+<h1>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
+
+<pre><code>    pip install pungi
+</code></pre>
+
+<h1>
+<a name="intention-of-this-library" class="anchor" href="#intention-of-this-library"><span class="octicon octicon-link"></span></a>Intention of this library</h1>
+
+<ul>
+<li>The library should have simple interface and easily extensible.</li>
+<li>Mocking a method or creating mock/stub object should simply be one line code.</li>
+<li>The tests should not contain any mock replay and verify steps.</li>
+<li>The expectations should be asserted after the action is performed.</li>
+</ul><h1>
+<a name="mocking-with-spies" class="anchor" href="#mocking-with-spies"><span class="octicon octicon-link"></span></a>Mocking with spies</h1>
+
+<p>This mocking library is based on AAA(Arrange Act Assert) pattern. It is built to be simple and easy to use without having to know about how the internals work.</p>
+
+<pre><code>    from pungi import spyOn, createSpy, expect
+</code></pre>
+
+<h2>
+<a name="mocking-a-classinstance-method" class="anchor" href="#mocking-a-classinstance-method"><span class="octicon octicon-link"></span></a>Mocking a class/instance method</h2>
+
+<pre><code>    spyOn(x, 'method') #Arrange
+
+    x.method() #Act
+
+    expect(x.method).toHaveBeenCalled() #Assert
+</code></pre>
+
+<p>The toHaveBeenCalled matcher can take optional argument <em>times</em> to indicate number times method should have been called</p>
+
+<pre><code>    expect(x.method).toHaveBeenCalled(times = 2)
+</code></pre>
+
+<p>Asserting arguments passed to method call</p>
+
+<pre><code>    expect(x.method).toHaveBeenCalledWith(foo, bar=1)
+</code></pre>
+
+<p>If you do not want to use the above syntax, you can do the same as:</p>
+
+<pre><code>    assertTrue(x.method.wasCalled(times=2)) # The failure message will not be as pretty as the *expect* syntax.
+    assertTrue(x.method.wasCalledWith(foo, bar=1))
+</code></pre>
+
+<p>All the expect matchers will have a corresponding negative assertion matcher.</p>
+
+<pre><code>    expect(x.method).notToHaveBeenCalled()
+    expect(x.method).notToHaveBeenCalledWith(foo, bar=1)
+</code></pre>
+
+<p>The spy can be configured in several ways</p>
+
+<pre><code>    spyOn(x, 'method').andReturn(foo) # x.method() returns foo
+
+    spyOn(x, 'method').andRaise(SomeException, "Message Args") # raise this exception on calling x.method()
+
+    spyOn(x, 'method').andCallThrough() # Call the original method, but record the call which can be used for assertion
+
+    spyOn(x, 'method').andCallFake(some_function) # Call the fake method and record the call
+</code></pre>
+
+<p>Same can be done with alternate syntax</p>
+
+<pre><code>    spyOn(x, 'method', returnValue=foo)
+    spyOn(x, 'method', raiseException=SomeException)
+    spyOn(x, 'method', callThrough=True)
+    spyOn(x, 'method', callFake=some_func)
+</code></pre>
+
+<p>The spied method contains useful methods</p>
+
+<pre><code>    x.method.callCount # Number of times x.method() was called
+
+    x.method.mostRecentCall
+    x.method.mostRecentCall.received(*args, **kwargs) # True or False
+    x.method.mostRecentCall.args # Positional arguments(*args) passed to the method
+    x.method.mostRecentCall.kwargs # Named arguments(**kwargs) passed to the method
+
+    x.method.argsForCall(index) # args for nth call
+    x.method.kwargsForCall(index) # kwargs for nth call
+</code></pre>
+
+<p>Mocking a class method is same as above:</p>
+
+<pre><code>  spyOn(FooClass, 'some_class_method')
+</code></pre>
+
+<h2>
+<a name="cleaning-up-spies" class="anchor" href="#cleaning-up-spies"><span class="octicon octicon-link"></span></a>Cleaning up spies</h2>
+
+<p>The spies can be cleared in few ways:</p>
+
+<ul>
+<li>
+<p>Decorating the test case</p>
+
+<pre><code>@pungi.dec.testcase
+class ClassDecoratorTest(unittest.TestCase): #Spies are cleared after every test(methods with 'test' in name)
+</code></pre>
+</li>
+<li>
+<p>Decorating individual tests</p>
+
+<pre><code>@pungi.dec.test
+def test_method(self):
+</code></pre>
+</li>
+<li><p>Add a teardown method which calls <em>pungi.stopSpying()</em></p></li>
+<li>
+<p>Use spy inside a <em>with</em> block</p>
+
+<pre><code>with spyOn(x, 'method', returnValue=foo):
+      x.method() # returns foo
+
+x.method() # returns actual value
+</code></pre>
+</li>
+</ul><h2>
+<a name="creating-mockstub-objects" class="anchor" href="#creating-mockstub-objects"><span class="octicon octicon-link"></span></a>Creating mock/stub objects</h2>
+
+<p>The createSpy method creates a mock/stub object with an optional name, this object records all the method calls.</p>
+
+<pre><code>    x = createSpy("greeter")
+
+    x.say_hello(to='world')
+
+    expect(x.say_hello).wasCalledWith(to='world')
+</code></pre>
+
+<p>The assertion syntax remains the same. Cleaning up spy objects is same as above. The individual methods on spy object can be setup using <em>spyOn</em> method shown above. The alternate syntax for setting up multiple methods with return values is:</p>
+
+<pre><code>    x = createSpy("person", age=20, balance=20000)
+</code></pre>
+
+<p>or you can configure individual methods</p>
+
+<pre><code>   x.age.returnValue = 20
+   x.foo.callFake = fake_method
+   x.bar.raiseException = SomeException
+</code></pre>
+
+<h2>
+<a name="chaining-methods-and-spies" class="anchor" href="#chaining-methods-and-spies"><span class="octicon octicon-link"></span></a>Chaining methods and spies</h2>
+
+<p>The spied methods return <em>spy objects</em> by default. Hence you need to define a spy only once in the complete method chain.</p>
+
+<pre><code>  spyOn(x, 'method')
+
+  x.method().another_method().foo()
+
+  x.method.callCount # 1
+  x.method().another_method.callCount # 1
+  x.method().another_method().foo.callCount # 1
+</code></pre>
+
+<p>The behavior is same for spies created using <em>createSpy</em> method.</p>
+
+<pre><code>  greeter = createSpy('greeter')
+
+  greeter.say().hello().to().world()
+</code></pre>
+
+<h2>
+<a name="asserting-the-order-in-which-methods-are-called" class="anchor" href="#asserting-the-order-in-which-methods-are-called"><span class="octicon octicon-link"></span></a>Asserting the order in which methods are called</h2>
+
+<p>The method call order is tracked for every test. This order can be accessed as</p>
+
+<pre><code>  x.method.callNumber # Number indicating global order in which x.method was called
+</code></pre>
+
+<p>It can asserted be as</p>
+
+<pre><code>  expect(obj.hi).toHaveBeenCalledBefore(obj.hello)
+
+  or
+
+  assertTrue(obj.hi.wasCalledBefore(obj.hello))
+</code></pre>
+
+<h1>
+<a name="using-expect-matchers" class="anchor" href="#using-expect-matchers"><span class="octicon octicon-link"></span></a>Using expect matchers</h1>
+
+<p>There are several inbuilt assertion matchers apart from the spy expectation matchers shown above.</p>
+
+<pre><code>    expect(1 + 1).toBe(2)
+    expect(1 + 1).toEqual(2)
+
+    expect(x).toBeNone()
+    expect(x).toBeTruthy()
+    expect(x).toBeFalsy()
+
+    expect("abcd").toMatch(".*b.*")
+
+    expect("abcd").toContain("b")
+    expect([1, 2, 3]).toContain(2)
+
+    expect(2).toBeGreaterThan(1)
+    expect(1).toBeLessThan(2)
+
+    expect(raise_ex).toRaise(SomeException)
+    expect(raise_ex).toRaise(SomeException, "Message")
+</code></pre>
+
+<p>All the above matchers have corresponding negative('notTo') matchers.</p>
+
+<pre><code>    expect(foo).notToBe(bar)
+</code></pre>
+
+<h2>
+<a name="adding-custom-matchers" class="anchor" href="#adding-custom-matchers"><span class="octicon octicon-link"></span></a>Adding custom matchers</h2>
+
+<p>The matchers are easily extensible to allow domain specific custom matchers to improve the readability of test. The custom matcher has to be a class which inherits from <em>pungi.matchers.Base</em> and implement <em>matches</em> method and optionally message method.</p>
+
+<pre><code>    class ToHaveAttr(pungi.matchers.Base):
+        def matches(self, expectedAttrName):
+            return hasattr(self.actual, expectedAttrName)
+</code></pre>
+
+<p>Add the matchers as</p>
+
+<pre><code>    pungi.matchers.add(ToHaveAttr, SomeMoreMatchers, ..)
+</code></pre>
+
+<p>The matcher is used as</p>
+
+<pre><code>    expect(foo).toHaveAttr('bar')
+    expect(foo).notToHaveAttr('qux')
+</code></pre>
+
+<p>More examples on defining a matcher can be found <a href="https://github.com/endeepak/pungi/blob/master/pungi/matchers.py">here</a></p>
+
+<h1>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h1>
+
+<ul>
+<li><p>Issues and feature requests can be added <a href="https://github.com/endeepak/pungi/issues/new">here</a></p></li>
+<li><p>If an issue can reproduced in the form of a test, fork the project and raise a <a href="https://github.com/endeepak/pungi/pull/new/master">pull request</a></p></li>
+</ul><h1>
+<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h1>
+
+<p>The tests pass with python 2.6 and 2.7. Please check the <a href="https://travis-ci.org/endeepak/pungi">build matrix</a> for more details.</p>
+
+<h1>
+<a name="miscellaneous" class="anchor" href="#miscellaneous"><span class="octicon octicon-link"></span></a>Miscellaneous</h1>
+
+<p>This library has been tested unittest framework. It may or may not work with other testing frameworks. If you notice any failures, please report the issue <a href="https://github.com/endeepak/pungi/issues/new">here</a>.</p>
+        </section>
+
+        <footer>
+          Pungi is maintained by <a href="https://github.com/endeepak">endeepak</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
