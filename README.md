@@ -28,7 +28,7 @@ Mocking with spies
 
 This mocking library is based on AAA(Arrange Act Assert) pattern. It is built to be simple and easy to use without having to know about how the internals work.
 
-        from pungi import spyOn, createSpy, expect
+        from pungi import spyOn, createSpy, expect, any
 
 Mocking a class/instance method
 -------------------------------
@@ -46,6 +46,7 @@ The toHaveBeenCalled matcher can take optional argument *times* to indicate numb
 Asserting arguments passed to method call
 
         expect(x.method).toHaveBeenCalledWith(foo, bar=1)
+        expect(x.method).toHaveBeenCalledWith(foo, bar=any(int))
 
 If you do not want to use the above syntax, you can do the same as:
 
@@ -56,6 +57,7 @@ All the expect matchers will have a corresponding negative assertion matcher.
 
         expect(x.method).notToHaveBeenCalled()
         expect(x.method).notToHaveBeenCalledWith(foo, bar=1)
+        expect(x.method).notToHaveBeenCalledWith(foo, bar=any(int))
 
 The spy can be configured in several ways
 
@@ -193,6 +195,7 @@ There are several inbuilt assertion matchers apart from the spy expectation matc
 
         expect(raise_ex).toRaise(SomeException)
         expect(raise_ex).toRaise(SomeException, "Message")
+        expect(raise_ex).toRaise(SomeException("Message"))        
 
 All the above matchers have corresponding negative('notTo') matchers.
 
