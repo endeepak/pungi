@@ -3,6 +3,7 @@ import sys
 import inspect
 from .string import humanize, pp
 from .expectations import Expectation
+from .any import Any
 
 
 def add(*matchers):
@@ -53,40 +54,45 @@ class ToBe(Base):
 class ToEqual(Base):
 
     def matches(self, expected):
-        return(ToEqual.match(self.actual, expected) and
-                ToEqual.match(expected, self.actual))
+        return(ToEqual.eq(self.actual, expected) and
+                ToEqual.eq(expected, self.actual))
 
     @staticmethod
-    def match(actual, expected):
-        if(isinstance(expected, str)):
-            return ToBe(actual).matches(expected)
-        if(hasattr(expected, '__dict__')):
-            try:
-                for name, value in expected.__dict__.items():
-                    try:
-                        actualValue = getattr(actual, name)
-                    except:
-                        return False
-                    if(not ToEqual.match(actualValue, value)):
-                        return False
-            except:
-                pass
+    def compare(actual, expected):
+        return(actual == expected and
+                (type(actual) == type(expected) or
+                isinstance(actual, Any) or isinstance(expected, Any)))
+
+    @staticmethod
+    def eq(actual, expected):
+        if(hasattr(expected, '__dict__') and not isinstance(expected, Any)):
+            for name, value in expected.__dict__.items():
+                try:
+                    actualValue = getattr(actual, name)
+                except:
+                    return False
+                if(not ToEqual.eq(actualValue, value)):
+                    return False
         try:
-            for i, item in enumerate(expected):
-                try:
-                    value = expected[item]
-                    key = item
-                except:
-                    value = item
-                    key = i
-                try:
-                    actualValue = actual[key]
-                except:
-                    return False
-                if(not ToEqual.match(actualValue, value)):
-                    return False
+            enum = enumerate(expected)
         except:
-            return ToBe(actual).matches(expected)
+            return ToEqual.compare(actual, expected)
+        for i, item in enum:
+            try:
+                value = expected[item]
+                key = item
+            except:
+                value = item
+                key = i
+            try:
+                actualValue = actual[key]
+            except:
+                return False
+            if(ToBe(value).matches(expected)):
+                if(not ToEqual.compare(actualValue, value)):
+                    return False
+            elif(not ToEqual.eq(actualValue, value)):
+                return False
         return True
 
 
@@ -140,12 +146,14 @@ class ToRaise(Base):
         except:
             ex_type, ex = sys.exc_info()[:2]
             if(message is None or ex.args[0] == message):
-                if expectedException is None:
+                if(expectedException is None):
                     return True
                 if(inspect.isclass(expectedException)):
-                    if issubclass(ex_type, expectedException):
+                    if(issubclass(ex_type, expectedException)):
                         return True
-                elif(ToEqual(ex).matches(expectedException)):
+                elif((isinstance(ex, type(expectedException)) or
+                        isinstance(expectedException, Any)) and
+                        ToEqual(ex).matches(expectedException)):
                     return True
 
 
@@ -159,6 +167,16 @@ class ToHaveBeenCalledWith(Base):
 
     def matches(self, *args, **kwargs):
         return self.actual.wasCalledWith(*args, **kwargs)
+
+    def message(self):
+        if self.actual.callCount:
+            calls = []
+            for i in range(0, self.actual.callCount):
+                calls.append(pp(*self.actual.argsForCall(i),
+                        **self.actual.kwargsForCall(i)))
+            return "{0} but was called with {1}".format(Base.message(self),
+                    "; ".join(calls))
+        return "{0} but it was never called.".format(Base.message(self))
 
 
 class ToHaveBeenCalledBefore(Base):

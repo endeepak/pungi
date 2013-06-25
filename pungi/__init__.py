@@ -2,6 +2,7 @@ import unittest
 from .expectations import Expectation
 from .spy import Method, Object
 from .matchers import Base as MatcherBase, add
+from .any import Any
 
 
 def expect(actual, *args, **kwargs):
@@ -19,6 +20,10 @@ def createSpy(name=None, **methodsWithReturnValue):
 
 def stopSpying():
     Method.stop()
+
+
+def any(clazz):
+    return Any(clazz)
 
 
 add(*MatcherBase.__subclasses__())
