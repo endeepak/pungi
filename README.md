@@ -1,13 +1,11 @@
-Pungi ![Build Status](https://travis-ci.org/endeepak/pungi.png)
+Pungi [![Build Status](https://travis-ci.org/endeepak/pungi.png)](https://travis-ci.org/endeepak/pungi)
 =====
 
-Simple and powerful mocking framework with extensible assertion matchers (Inspired by [jasmine](https://github.com/pivotal/jasmine/wiki/Spies) BDD framework)
+Simple and powerful python mocking framework with extensible assertion matchers (Inspired by [jasmine](https://github.com/pivotal/jasmine/wiki/Spies) BDD framework)
 
 [define:pungi](http://www.google.com/search?q=define:pungi)
 
-This documentation is for the latest code on this branch. For earlier versions, refer to corresponding tags.
-
-[v0.1.0](https://github.com/endeepak/pungi/tree/v0.1.0), [v0.1.1](https://github.com/endeepak/pungi/tree/v0.1.1)
+This documentation is for the latest code on this branch. For earlier versions, please refer to corresponding [tags](https://github.com/endeepak/pungi/tags).
 
 Install
 =======

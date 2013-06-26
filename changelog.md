@@ -1,3 +1,11 @@
+0.1.4
+-----
+* Jasmine compatibility + Bug fixes (Thanks to [logeen](https://github.com/logeen))
+	* Handling for special value jasmine.any equivalent.
+	* Infinite recursion blockade in toEqual matcher.
+	* Bug fix : Checking also type of exception in toRaise matcher
+* Coding standards: Pep8 and pyflakes compatibility
+
 0.1.3
 -----
 * Jasmine compatibility; important fixes (Thanks to [logeen](https://github.com/logeen))

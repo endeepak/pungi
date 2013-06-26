@@ -1,4 +1,4 @@
 ## Matchers
 
-* Add aliasing matchers : ToBe => ToEqual
+* Run tests with Python 3
 * Dynamic matchers : expect("foo").startswith("f")

@@ -6,7 +6,7 @@ description = 'Simple and powerful mocking framework with '\
 
 setup(
     name='pungi',
-    version='0.1.3',
+    version='0.1.4',
     description=description,
     long_description=description,
     author='Deepak N',
