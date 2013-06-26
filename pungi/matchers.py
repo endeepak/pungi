@@ -26,7 +26,7 @@ class Base(object):
         ''' Override this to provide failure message'''
         name = self.__class__.__name__
         return "{0} {1}".format(humanize(name),
-                        pp(*self.expectedArgs, **self.expectedKwArgs))
+                                pp(*self.expectedArgs, **self.expectedKwArgs))
 
     def matches(self):
         ''' Override this to verify assert'''
@@ -55,12 +55,12 @@ class ToEqual(Base):
 
     def matches(self, expected):
         return(ToEqual.eq(self.actual, expected) and
-                ToEqual.eq(expected, self.actual))
+               ToEqual.eq(expected, self.actual))
 
     @staticmethod
     def compare(actual, expected):
         return(actual == expected and
-                (type(actual) == type(expected) or
+               (type(actual) == type(expected) or
                 isinstance(actual, Any) or isinstance(expected, Any)))
 
     @staticmethod
@@ -173,9 +173,9 @@ class ToHaveBeenCalledWith(Base):
             calls = []
             for i in range(0, self.actual.callCount):
                 calls.append(pp(*self.actual.argsForCall(i),
-                        **self.actual.kwargsForCall(i)))
+                                **self.actual.kwargsForCall(i)))
             return "{0} but was called with {1}".format(Base.message(self),
-                    "; ".join(calls))
+                                                        "; ".join(calls))
         return "{0} but it was never called.".format(Base.message(self))
 
 

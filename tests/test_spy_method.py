@@ -1,7 +1,6 @@
 import unittest
 from pungi import spy
 from pungi import spyOn
-from pungi import expect
 from pungi import dec
 
 

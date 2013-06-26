@@ -1,4 +1,3 @@
-import unittest
 from .expectations import Expectation
 from .spy import Method, Object
 from .matchers import Base as MatcherBase, add

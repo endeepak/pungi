@@ -4,7 +4,7 @@ import re
 def pp(*args, **kwargs):
     args_list = [repr(s) for s in args]
     kwargs_list = ["{0}={1}".format(key, repr(value))
-                    for key, value in kwargs.items()]
+                   for key, value in kwargs.items()]
     return ", ".join(args_list + kwargs_list)
 
 

@@ -22,7 +22,7 @@ class MethodDecoratorTest(unittest.TestCase):
 
     def tearDown(self):
         self.assertEqual(self.obj.hello(), "hello",
-                        "Decorator did not stop spying!!")
+                         "Decorator did not stop spying!!")
 
 
 @pungi.dec.testcase
@@ -38,7 +38,7 @@ class ClassDecoratorTest(unittest.TestCase):
 
     def tearDown(self):
         self.assertEqual(self.obj.hello(), "hello",
-                        "Decorator did not stop spying!!")
+                         "Decorator did not stop spying!!")
 
 
 if __name__ == '__main__':

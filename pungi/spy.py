@@ -27,7 +27,7 @@ class Method(object):
         _CALL_NUMBER = 1
 
     def __init__(self, target, methodName, originalMethod, returnValue=None,
-                raiseException=None, callThrough=False, callFake=None):
+                 raiseException=None, callThrough=False, callFake=None):
         self._target = target
         self._methodName = methodName
         self._originalMethod = originalMethod

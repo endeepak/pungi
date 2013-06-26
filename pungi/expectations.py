@@ -9,7 +9,7 @@ class Expectation(object):
     def verify(self, matcher):
         if(not matcher.matchesExpectation()):
             self.fail("Expected {0} {1}".format(
-                        repr(self.actual), matcher.message()))
+                      repr(self.actual), matcher.message()))
 
     def fail(slef, message):
         raise AssertionError(message)
@@ -22,11 +22,11 @@ class Expectation(object):
 
         def matcher_function(self, *expectedArgs, **expectedKwArgs):
             self.verify(matcherClass(self.actual, *expectedArgs,
-                                    **expectedKwArgs))
+                                     **expectedKwArgs))
 
         def negated_matcher_function(self, *expectedArgs, **expectedKwArgs):
             self.verify(matcherClass(self.actual, *expectedArgs,
-                                                 **expectedKwArgs).negated)
+                                     **expectedKwArgs).negated)
 
         setattr(cls, method_name, matcher_function)
         setattr(cls, negated_method_name, negated_matcher_function)
