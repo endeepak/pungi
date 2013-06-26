@@ -32,16 +32,14 @@
 
         <section id="main_content">
           <h1>
-<a name="pungi-" class="anchor" href="#pungi-"><span class="octicon octicon-link"></span></a>Pungi <img src="https://travis-ci.org/endeepak/pungi.png" alt="Build Status">
+<a name="pungi-" class="anchor" href="#pungi-"><span class="octicon octicon-link"></span></a>Pungi <a href="https://travis-ci.org/endeepak/pungi"><img src="https://travis-ci.org/endeepak/pungi.png" alt="Build Status"></a>
 </h1>
 
-<p>Simple and powerful mocking framework with extensible assertion matchers (Inspired by <a href="https://github.com/pivotal/jasmine/wiki/Spies">jasmine</a> BDD framework)</p>
+<p>Simple and powerful python mocking framework with extensible assertion matchers (Inspired by <a href="https://github.com/pivotal/jasmine/wiki/Spies">jasmine</a> BDD framework)</p>
 
 <p><a href="http://www.google.com/search?q=define:pungi">define:pungi</a></p>
 
-<p>This documentation is for the latest code on this branch. For earlier versions, refer to corresponding tags.</p>
-
-<p><a href="https://github.com/endeepak/pungi/tree/v0.1.0">v0.1.0</a>, <a href="https://github.com/endeepak/pungi/tree/v0.1.1">v0.1.1</a></p>
+<p>This documentation is for the latest code on this branch. For earlier versions, please refer to corresponding <a href="https://github.com/endeepak/pungi/tags">tags</a>.</p>
 
 <h1>
 <a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h1>
@@ -62,7 +60,7 @@
 
 <p>This mocking library is based on AAA(Arrange Act Assert) pattern. It is built to be simple and easy to use without having to know about how the internals work.</p>
 
-<pre><code>    from pungi import spyOn, createSpy, expect
+<pre><code>    from pungi import spyOn, createSpy, expect, any
 </code></pre>
 
 <h2>
@@ -83,6 +81,7 @@
 <p>Asserting arguments passed to method call</p>
 
 <pre><code>    expect(x.method).toHaveBeenCalledWith(foo, bar=1)
+    expect(x.method).toHaveBeenCalledWith(foo, bar=any(int))
 </code></pre>
 
 <p>If you do not want to use the above syntax, you can do the same as:</p>
@@ -95,6 +94,7 @@
 
 <pre><code>    expect(x.method).notToHaveBeenCalled()
     expect(x.method).notToHaveBeenCalledWith(foo, bar=1)
+    expect(x.method).notToHaveBeenCalledWith(foo, bar=any(int))
 </code></pre>
 
 <p>The spy can be configured in several ways</p>
@@ -248,6 +248,7 @@ x.method() # returns actual value
 
     expect(raise_ex).toRaise(SomeException)
     expect(raise_ex).toRaise(SomeException, "Message")
+    expect(raise_ex).toRaise(SomeException("Message"))        
 </code></pre>
 
 <p>All the above matchers have corresponding negative('notTo') matchers.</p>
